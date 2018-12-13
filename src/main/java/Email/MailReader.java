@@ -41,7 +41,6 @@ public class MailReader {
 
     public void deleteFetchedMessages() throws MessagingException {
         for (Message message : messages) message.setFlag(Flags.Flag.DELETED, true);
-
     }
 
     public void waitForNewMessage(int waitingLimitInSeconds) throws TimeoutException, MessagingException,
