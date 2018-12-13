@@ -31,7 +31,7 @@ public class GmailTest extends TestBase {
 
     @Test()
     @Parameters({"email"})
-    public void shouldReadLastUnreadGmailThenDeleteIt(String email) throws Exception {
+    public void shouldReadLastUnreadGmailThenArchiveIt(String email) throws Exception {
 
         log.info("Get last unread email");
         Email lastUnreadEmail = mail.getLastUnreadEmail();
