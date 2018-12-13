@@ -1,6 +1,5 @@
 import Email.Email;
 import Email.MailReader;
-import Utils.TestBase;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.log4j.PropertyConfigurator;
 import org.testng.Assert;
@@ -13,7 +12,9 @@ import org.testng.annotations.Test;
 import javax.mail.MessagingException;
 
 @Slf4j
-public class GmailTest extends TestBase {
+public class GmailTest {
+
+    private MailReader mail;
 
     @BeforeMethod
     @Parameters({"email", "emailPassword"})
@@ -21,17 +22,24 @@ public class GmailTest extends TestBase {
         PropertyConfigurator.configure("log4j.properties");
 
         log.info("Open Java Mail");
-        mail = new MailReader(email, password);
+        mail = MailReader.init(email, password);
     }
 
     @AfterMethod
     public void tearDown(ITestResult result) throws MessagingException {
-        closeJavaMail();
+        log.info("Delete read messages");
+        mail.deleteFetchedMessages();
+
+        log.info("Closing Java Mail");
+        mail.close();
     }
 
     @Test()
     @Parameters({"email"})
-    public void shouldReadLastUnreadGmailThenArchiveIt(String email) throws Exception {
+    public void shouldReadLastUnreadGmailThenDeleteIt(String email) throws Exception {
+
+        log.info("Wait for new message");
+        mail.waitForNewMessage(60);
 
         log.info("Get last unread email");
         Email lastUnreadEmail = mail.getLastUnreadEmail();
@@ -39,8 +47,8 @@ public class GmailTest extends TestBase {
         log.info("Asserting email");
         Assert.assertEquals(lastUnreadEmail.getFrom(), "[// sender email]");
         Assert.assertEquals(lastUnreadEmail.getTo(), "[" + email + "]");
-        Assert.assertTrue(lastUnreadEmail.getSubject().contains("Test Subject"));
-        Assert.assertEquals(lastUnreadEmail.getPartContentTypeByIndex(1), "APPLICATION/PDF");
-        Assert.assertEquals(lastUnreadEmail.getPartContentTypeByIndex(2), "APPLICATION/PDF2");
+//        Assert.assertTrue(lastUnreadEmail.getSubject().contains("Sample Subject"));
+//        Assert.assertEquals(lastUnreadEmail.getPartContentTypeByIndex(1), "APPLICATION/PDF");
+//        Assert.assertEquals(lastUnreadEmail.getPartContentTypeByIndex(2), "APPLICATION/PDF2");
     }
 }
