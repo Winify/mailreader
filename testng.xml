@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+
+<suite name="mailreader">
+
+    <listeners>
+        <listener class-name="Utils.ResultListener"/>
+    </listeners>
+
+    <parameter name="email" value="// gmail account"/>
+    <parameter name="emailPassword" value="// gmail account password"/>
+
+    <test name="email-test">
+        <classes>
+            <class name="GmailTest"/>
+        </classes>
+    </test>
+</suite>
